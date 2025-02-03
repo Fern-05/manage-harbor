@@ -5,6 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
 import { Link } from "react-router-dom";
 import { Chrome } from "lucide-react";
+import { toast } from "sonner";
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -15,15 +21,49 @@ const Signup = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    console.log("Attempting signup with:", { email });
     
-    // TODO: Implement signup logic when Supabase is connected
-    setLoading(false);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/login`,
+        },
+      });
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+
+      if (data.user) {
+        toast.success("Check your email to confirm your account!");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      toast.error("An error occurred during signup");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleSignup = async () => {
-    console.log("Attempting Google signup");
-    // TODO: Implement Google signup logic when Supabase is connected
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/`,
+        },
+      });
+
+      if (error) {
+        toast.error(error.message);
+      }
+    } catch (error) {
+      console.error("Google signup error:", error);
+      toast.error("An error occurred during Google signup");
+    }
   };
 
   return (
