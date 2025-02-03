@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
 import { Link } from "react-router-dom";
+import { Google } from "lucide-react";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -20,6 +21,11 @@ const Signup = () => {
     setLoading(false);
   };
 
+  const handleGoogleSignup = async () => {
+    console.log("Attempting Google signup");
+    // TODO: Implement Google signup logic when Supabase is connected
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-md space-y-8 p-8">
@@ -28,6 +34,26 @@ const Signup = () => {
           <p className="text-muted-foreground mt-2">
             Sign up to get started
           </p>
+        </div>
+
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={handleGoogleSignup}
+        >
+          <Google className="mr-2" />
+          Continue with Google
+        </Button>
+
+        <div className="relative my-8">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Or continue with
+            </span>
+          </div>
         </div>
 
         <form onSubmit={handleSignup} className="mt-8 space-y-6">

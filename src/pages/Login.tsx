@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
 import { Link } from "react-router-dom";
+import { Google } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -20,6 +21,11 @@ const Login = () => {
     setLoading(false);
   };
 
+  const handleGoogleLogin = async () => {
+    console.log("Attempting Google login");
+    // TODO: Implement Google login logic when Supabase is connected
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-md space-y-8 p-8">
@@ -28,6 +34,26 @@ const Login = () => {
           <p className="text-muted-foreground mt-2">
             Sign in to your account to continue
           </p>
+        </div>
+
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={handleGoogleLogin}
+        >
+          <Google className="mr-2" />
+          Continue with Google
+        </Button>
+
+        <div className="relative my-8">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Or continue with
+            </span>
+          </div>
         </div>
 
         <form onSubmit={handleLogin} className="mt-8 space-y-6">
