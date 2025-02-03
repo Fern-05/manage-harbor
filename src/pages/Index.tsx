@@ -2,20 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Link } from "react-router-dom";
-import { useRef } from "react";
 
 const Index = () => {
-  const featuresRef = useRef<HTMLElement>(null);
-  const pricingRef = useRef<HTMLElement>(null);
-
-  const scrollToSection = (ref: React.RefObject<HTMLElement>) => {
-    ref.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <div className="flex min-h-screen flex-col">
-      <Header onFeaturesClick={() => scrollToSection(featuresRef)} 
-             onPricingClick={() => scrollToSection(pricingRef)} />
+      <Header />
       <main className="flex-1">
         {/* Hero Section */}
         <section className="container flex flex-col items-center gap-4 pt-32 pb-8 text-center md:pt-40">
@@ -30,18 +21,17 @@ const Index = () => {
             <Button size="lg" asChild>
               <Link to="/signup">Get Started</Link>
             </Button>
-            <Button size="lg" variant="outline" onClick={() => scrollToSection(featuresRef)}>
-              Learn More
+            <Button size="lg" variant="outline" asChild>
+              <Link to="/demo">View Demo</Link>
             </Button>
           </div>
         </section>
 
         {/* Features Section */}
-        <section ref={featuresRef} className="container py-20 scroll-mt-20">
-          <h2 className="text-3xl font-bold text-center mb-12">Powerful Features</h2>
+        <section className="container py-20">
           <div className="grid gap-8 md:grid-cols-3">
-            <div className="flex flex-col items-center text-center group hover:bg-accent p-6 rounded-lg transition-colors">
-              <div className="mb-4 rounded-lg bg-primary/10 p-4 group-hover:bg-primary/20 transition-colors">
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-4 rounded-lg bg-primary/10 p-4">
                 <svg
                   className="h-6 w-6 text-primary"
                   fill="none"
@@ -61,8 +51,8 @@ const Index = () => {
                 Create, assign, and track tasks with ease. Keep your team aligned and productive.
               </p>
             </div>
-            <div className="flex flex-col items-center text-center group hover:bg-accent p-6 rounded-lg transition-colors">
-              <div className="mb-4 rounded-lg bg-primary/10 p-4 group-hover:bg-primary/20 transition-colors">
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-4 rounded-lg bg-primary/10 p-4">
                 <svg
                   className="h-6 w-6 text-primary"
                   fill="none"
@@ -82,8 +72,8 @@ const Index = () => {
                 Work together seamlessly with real-time updates and communication tools.
               </p>
             </div>
-            <div className="flex flex-col items-center text-center group hover:bg-accent p-6 rounded-lg transition-colors">
-              <div className="mb-4 rounded-lg bg-primary/10 p-4 group-hover:bg-primary/20 transition-colors">
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-4 rounded-lg bg-primary/10 p-4">
                 <svg
                   className="h-6 w-6 text-primary"
                   fill="none"
@@ -102,116 +92,6 @@ const Index = () => {
               <p className="text-muted-foreground">
                 Track progress and performance with detailed analytics and reporting tools.
               </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Pricing Section */}
-        <section ref={pricingRef} className="border-t bg-muted/40 py-20 scroll-mt-20">
-          <div className="container">
-            <h2 className="text-3xl font-bold text-center mb-12">Simple, Transparent Pricing</h2>
-            <div className="grid gap-8 md:grid-cols-3">
-              {/* Free Plan */}
-              <div className="flex flex-col p-6 bg-background rounded-lg shadow-lg border transition-transform hover:scale-105">
-                <h3 className="text-2xl font-bold mb-2">Free</h3>
-                <div className="text-4xl font-bold mb-4">$0<span className="text-lg font-normal text-muted-foreground">/mo</span></div>
-                <ul className="mb-6 flex-1 space-y-2">
-                  <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Up to 3 projects
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Basic task management
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    2 team members
-                  </li>
-                </ul>
-                <Button size="lg" variant="outline" asChild>
-                  <Link to="/signup">Get Started</Link>
-                </Button>
-              </div>
-
-              {/* Pro Plan */}
-              <div className="flex flex-col p-6 bg-background rounded-lg shadow-lg border border-primary transition-transform hover:scale-105">
-                <div className="absolute top-0 right-0 -translate-y-1/2 px-3 py-1 bg-primary text-primary-foreground text-sm font-medium rounded-full">
-                  Popular
-                </div>
-                <h3 className="text-2xl font-bold mb-2">Pro</h3>
-                <div className="text-4xl font-bold mb-4">$29<span className="text-lg font-normal text-muted-foreground">/mo</span></div>
-                <ul className="mb-6 flex-1 space-y-2">
-                  <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Unlimited projects
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Advanced task management
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Up to 10 team members
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Analytics dashboard
-                  </li>
-                </ul>
-                <Button size="lg" asChild>
-                  <Link to="/signup">Start Free Trial</Link>
-                </Button>
-              </div>
-
-              {/* Enterprise Plan */}
-              <div className="flex flex-col p-6 bg-background rounded-lg shadow-lg border transition-transform hover:scale-105">
-                <h3 className="text-2xl font-bold mb-2">Enterprise</h3>
-                <div className="text-4xl font-bold mb-4">$99<span className="text-lg font-normal text-muted-foreground">/mo</span></div>
-                <ul className="mb-6 flex-1 space-y-2">
-                  <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Everything in Pro
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Unlimited team members
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    24/7 priority support
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Custom integrations
-                  </li>
-                </ul>
-                <Button size="lg" variant="outline" asChild>
-                  <Link to="/contact">Contact Sales</Link>
-                </Button>
-              </div>
             </div>
           </div>
         </section>
