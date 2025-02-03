@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
 import { Link } from "react-router-dom";
-import { Google } from "lucide-react";
+import { Chrome } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -41,7 +41,7 @@ const Login = () => {
           className="w-full"
           onClick={handleGoogleLogin}
         >
-          <Google className="mr-2" />
+          <Chrome className="mr-2" />
           Continue with Google
         </Button>
 
