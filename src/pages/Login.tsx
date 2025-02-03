@@ -36,7 +36,7 @@ const Login = () => {
 
       if (data.user) {
         toast.success("Successfully logged in!");
-        navigate("/");
+        navigate("/account");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -51,7 +51,7 @@ const Login = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: `${window.location.origin}/account`,
         },
       });
 
