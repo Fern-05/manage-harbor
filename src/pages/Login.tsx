@@ -6,10 +6,11 @@ import { createClient } from "@supabase/supabase-js";
 import { Link } from "react-router-dom";
 import { Chrome } from "lucide-react";
 import { toast } from "sonner";
+import { supabaseConfig } from "@/config/supabase";
 
 const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
+  supabaseConfig.url,
+  supabaseConfig.anonKey
 );
 
 const Login = () => {
