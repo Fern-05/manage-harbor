@@ -6,8 +6,22 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { supabaseConfig } from "@/config/supabase";
 import { Header } from "@/components/layout/Header";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Plus } from "lucide-react";
 
 const supabase = createClient(supabaseConfig.url, supabaseConfig.anonKey);
+
+interface Company {
+  id: string;
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+  sales_tax: number;
+  website: string;
+}
 
 const Account = () => {
   const navigate = useNavigate();
@@ -17,6 +31,16 @@ const Account = () => {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [updating, setUpdating] = useState(false);
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newCompany, setNewCompany] = useState({
+    name: "",
+    address: "",
+    phone: "",
+    email: "",
+    sales_tax: 0,
+    website: ""
+  });
 
   useEffect(() => {
     const getUser = async () => {
@@ -28,6 +52,7 @@ const Account = () => {
         }
         setUser(user);
         setEmail(user.email || "");
+        fetchCompanies(user.id);
       } catch (error) {
         console.error('Error fetching user:', error);
         toast.error('Error loading user data');
@@ -38,6 +63,54 @@ const Account = () => {
 
     getUser();
   }, [navigate]);
+
+  const fetchCompanies = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('companies')
+        .select('*')
+        .eq('user_id', userId);
+
+      if (error) throw error;
+      setCompanies(data || []);
+    } catch (error) {
+      console.error('Error fetching companies:', error);
+      toast.error('Error loading companies');
+    }
+  };
+
+  const handleCreateCompany = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('companies')
+        .insert([
+          {
+            ...newCompany,
+            user_id: user.id
+          }
+        ])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setCompanies([...companies, data]);
+      setIsDialogOpen(false);
+      setNewCompany({
+        name: "",
+        address: "",
+        phone: "",
+        email: "",
+        sales_tax: 0,
+        website: ""
+      });
+      toast.success('Company created successfully');
+      navigate(`/application/${data.id}`);
+    } catch (error) {
+      console.error('Error creating company:', error);
+      toast.error('Error creating company');
+    }
+  };
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,7 +176,7 @@ const Account = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="container pt-20">
-        <div className="max-w-2xl mx-auto space-y-8">
+        <div className="max-w-4xl mx-auto space-y-8">
           <div className="bg-card rounded-lg shadow-lg p-6">
             <h1 className="text-2xl font-bold mb-6">Account Details</h1>
             
@@ -148,6 +221,88 @@ const Account = () => {
                   Update Password
                 </Button>
               </form>
+            </div>
+
+            <div className="mt-8 pt-8 border-t">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Companies</h2>
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Company
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Add New Company</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div className="space-y-2">
+                        <Label>Company Name</Label>
+                        <Input
+                          value={newCompany.name}
+                          onChange={(e) => setNewCompany({ ...newCompany, name: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Address</Label>
+                        <Input
+                          value={newCompany.address}
+                          onChange={(e) => setNewCompany({ ...newCompany, address: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Phone</Label>
+                        <Input
+                          value={newCompany.phone}
+                          onChange={(e) => setNewCompany({ ...newCompany, phone: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Email</Label>
+                        <Input
+                          type="email"
+                          value={newCompany.email}
+                          onChange={(e) => setNewCompany({ ...newCompany, email: e.target.value })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Sales Tax %</Label>
+                        <Input
+                          type="number"
+                          value={newCompany.sales_tax}
+                          onChange={(e) => setNewCompany({ ...newCompany, sales_tax: parseFloat(e.target.value) })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Website</Label>
+                        <Input
+                          value={newCompany.website}
+                          onChange={(e) => setNewCompany({ ...newCompany, website: e.target.value })}
+                        />
+                      </div>
+                      <Button onClick={handleCreateCompany} className="w-full">
+                        Create Company
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                {companies.map((company) => (
+                  <Card key={company.id} className="cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => navigate(`/application/${company.id}`)}>
+                    <CardHeader>
+                      <CardTitle>{company.name}</CardTitle>
+                      <CardDescription>{company.email}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground">{company.address}</p>
+                      <p className="text-sm text-muted-foreground">{company.phone}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
 
             <div className="mt-8 pt-8 border-t">

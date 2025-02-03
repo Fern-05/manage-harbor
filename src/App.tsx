@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Account from "./pages/Account";
+import Application from "./pages/Application";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/application/:companyId" element={<Application />} />
             <Route path="/features" element={<NotFound />} />
             <Route path="/pricing" element={<NotFound />} />
             <Route path="/about" element={<NotFound />} />
