@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createClientComponentClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 import { Link } from "react-router-dom";
 
 const Login = () => {
@@ -13,7 +13,10 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const supabase = createClientComponentClient();
+  const supabase = createClient(
+    import.meta.env.VITE_SUPABASE_URL,
+    import.meta.env.VITE_SUPABASE_ANON_KEY
+  );
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
