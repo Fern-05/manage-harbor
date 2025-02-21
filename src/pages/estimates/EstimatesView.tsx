@@ -4,16 +4,9 @@ import { createClient } from "@supabase/supabase-js";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabaseConfig } from "@/config/supabase";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, ArrowLeft } from "lucide-react";
 import { EstimateForm } from "@/components/estimates/EstimateForm";
 import { EstimatesList } from "@/components/estimates/EstimatesList";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,7 +27,7 @@ interface EstimatesViewProps {
 
 export function EstimatesView({ companyId }: EstimatesViewProps) {
   const queryClient = useQueryClient();
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [editingEstimate, setEditingEstimate] = useState<any>(null);
   const [deleteEstimate, setDeleteEstimate] = useState<string | null>(null);
 
@@ -54,7 +47,7 @@ export function EstimatesView({ companyId }: EstimatesViewProps) {
       if (error) throw error;
 
       toast.success("Estimate created successfully");
-      setIsCreateOpen(false);
+      setShowForm(false);
       queryClient.invalidateQueries({ queryKey: ["estimates", companyId] });
     } catch (error) {
       console.error("Error creating estimate:", error);
@@ -122,24 +115,47 @@ export function EstimatesView({ companyId }: EstimatesViewProps) {
     }
   };
 
+  if (showForm) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="sm" onClick={() => setShowForm(false)}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Estimates
+          </Button>
+          <h2 className="text-2xl font-bold">New Estimate</h2>
+        </div>
+        <EstimateForm onSubmit={handleCreate} />
+      </div>
+    );
+  }
+
+  if (editingEstimate) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="sm" onClick={() => setEditingEstimate(null)}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Estimates
+          </Button>
+          <h2 className="text-2xl font-bold">Edit Estimate</h2>
+        </div>
+        <EstimateForm
+          initialData={editingEstimate}
+          onSubmit={handleUpdate}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Estimates</h2>
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              New Estimate
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-4xl">
-            <DialogHeader>
-              <DialogTitle>Create New Estimate</DialogTitle>
-            </DialogHeader>
-            <EstimateForm onSubmit={handleCreate} />
-          </DialogContent>
-        </Dialog>
+        <Button onClick={() => setShowForm(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          New Estimate
+        </Button>
       </div>
 
       <EstimatesList
@@ -147,20 +163,6 @@ export function EstimatesView({ companyId }: EstimatesViewProps) {
         onEdit={handleEdit}
         onDelete={setDeleteEstimate}
       />
-
-      {editingEstimate && (
-        <Dialog open={!!editingEstimate} onOpenChange={() => setEditingEstimate(null)}>
-          <DialogContent className="max-w-4xl">
-            <DialogHeader>
-              <DialogTitle>Edit Estimate</DialogTitle>
-            </DialogHeader>
-            <EstimateForm
-              initialData={editingEstimate}
-              onSubmit={handleUpdate}
-            />
-          </DialogContent>
-        </Dialog>
-      )}
 
       <AlertDialog open={!!deleteEstimate} onOpenChange={() => setDeleteEstimate(null)}>
         <AlertDialogContent>
