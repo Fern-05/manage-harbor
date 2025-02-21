@@ -175,7 +175,7 @@ const Application = () => {
 
         <div className="flex-1">
           <ApplicationHeader />
-          <main className="container pt-20">
+          <main className="container max-w-6xl mx-auto pt-20">
             {renderContent()}
           </main>
         </div>
