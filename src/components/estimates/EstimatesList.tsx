@@ -65,7 +65,7 @@ export function EstimatesList({ companyId, onEdit, onDelete }: EstimatesListProp
                     : estimate.status === "sent"
                     ? "default"
                     : estimate.status === "accepted"
-                    ? "success"
+                    ? "default"
                     : "destructive"
                 }
               >
