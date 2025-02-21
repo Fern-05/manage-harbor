@@ -4,14 +4,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
 import { supabaseConfig } from "@/config/supabase";
 import { ApplicationHeader } from "@/components/layout/ApplicationHeader";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider } from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarFooter } from "@/components/ui/sidebar";
 import { 
   LayoutDashboard, Users, Calendar, Map, FileText, Settings,
   UserPlus, Phone, FileSpreadsheet, Briefcase, CheckSquare,
-  Sliders, Package2, DollarSign, CreditCard
+  Sliders, Package2, DollarSign, CreditCard, LogOut
 } from "lucide-react";
 import { toast } from "sonner";
 import { EstimatesView } from "./estimates/EstimatesView";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const supabase = createClient(supabaseConfig.url, supabaseConfig.anonKey);
 
@@ -54,6 +55,15 @@ const Application = () => {
   const { companyId } = useParams();
   const [company, setCompany] = useState<Company | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+  }, []);
 
   useEffect(() => {
     const fetchCompany = async () => {
@@ -87,6 +97,20 @@ const Application = () => {
 
     fetchCompany();
   }, [companyId, navigate]);
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast.error('Error signing out');
+    }
+  };
+
+  const userInitials = user?.user_metadata?.full_name ? 
+    user.user_metadata.full_name.split(' ').map((n: string) => n[0]).join('') : 
+    user?.email?.[0].toUpperCase() || '?';
 
   const renderContent = () => {
     switch (activeTab) {
@@ -171,6 +195,29 @@ const Application = () => {
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
+          <SidebarFooter>
+            <div className="p-4 border-t">
+              <SidebarMenuButton 
+                onClick={handleLogout}
+                className="w-full justify-between mb-4"
+              >
+                <div className="flex items-center gap-2">
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </div>
+              </SidebarMenuButton>
+              <div className="flex items-center gap-3">
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback>{userInitials}</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium truncate">
+                    {user?.user_metadata?.full_name || user?.email}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </SidebarFooter>
         </Sidebar>
 
         <div className="flex-1">
