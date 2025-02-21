@@ -12,6 +12,7 @@ import {
 import { toast } from "sonner";
 import { EstimatesView } from "./estimates/EstimatesView";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const supabase = createClient(supabaseConfig.url, supabaseConfig.anonKey);
 
@@ -223,25 +224,28 @@ const Application = () => {
             </SidebarGroup>
           </SidebarContent>
           <SidebarFooter>
-            <div className="p-4 border-t">
+            <div className="p-4 border-t space-y-4">
               <SidebarMenuButton 
                 onClick={handleLogout}
-                className="w-full justify-between mb-4"
+                className="w-full justify-between"
               >
                 <div className="flex items-center gap-2">
                   <LogOut className="h-4 w-4" />
                   <span>Logout</span>
                 </div>
               </SidebarMenuButton>
-              <div className="flex items-center gap-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback>{userInitials}</AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[150px]">
-                    {user?.user_metadata?.full_name || user?.email}
-                  </span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback>{userInitials}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[150px]">
+                      {user?.user_metadata?.full_name || user?.email}
+                    </span>
+                  </div>
                 </div>
+                <ThemeToggle />
               </div>
             </div>
           </SidebarFooter>
