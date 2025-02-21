@@ -36,7 +36,7 @@ export function EstimatesView({ companyId }: EstimatesViewProps) {
       const { error } = await supabase.from("estimates").insert([
         {
           ...data,
-          company_id: companyId,
+          company_id: parseInt(companyId), // Convert string ID to number
           total_amount: data.line_items.reduce(
             (sum: number, item: any) => sum + item.total,
             0
