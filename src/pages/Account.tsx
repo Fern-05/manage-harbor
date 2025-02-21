@@ -66,15 +66,39 @@ const Account = () => {
 
   const fetchCompanies = async (userId: string) => {
     try {
+      console.log("Fetching companies for user:", userId);
+      
+      // First, let's check if we can access the database at all
+      const { data: tables, error: tablesError } = await supabase
+        .from('companies')
+        .select('*')
+        .limit(1);
+      
+      console.log("Tables response:", { tables, tablesError });
+
+      if (tablesError) {
+        console.error("Error accessing companies table:", tablesError);
+        toast.error('Error accessing database');
+        return;
+      }
+
+      // Now try to fetch the actual companies
       const { data, error } = await supabase
         .from('companies')
         .select('*')
         .eq('user_id', userId);
 
-      if (error) throw error;
+      console.log("Companies query response:", { data, error });
+
+      if (error) {
+        console.error('Error fetching companies:', error);
+        toast.error('Error loading companies');
+        return;
+      }
+
       setCompanies(data || []);
     } catch (error) {
-      console.error('Error fetching companies:', error);
+      console.error('Unexpected error fetching companies:', error);
       toast.error('Error loading companies');
     }
   };
