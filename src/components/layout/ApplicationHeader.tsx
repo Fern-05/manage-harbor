@@ -39,7 +39,7 @@ export function ApplicationHeader() {
           </SidebarTrigger>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-sm font-medium truncate">
+          <span className="text-sm font-medium truncate w-fit">
             {user?.user_metadata?.full_name || user?.email}
           </span>
           <Avatar className="h-8 w-8 shrink-0">
