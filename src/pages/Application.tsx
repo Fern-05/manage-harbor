@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
@@ -11,6 +10,7 @@ import {
   Sliders, Package2, DollarSign, CreditCard
 } from "lucide-react";
 import { toast } from "sonner";
+import { EstimatesView } from "./estimates/EstimatesView";
 
 const supabase = createClient(supabaseConfig.url, supabaseConfig.anonKey);
 
@@ -87,6 +87,22 @@ const Application = () => {
     fetchCompany();
   }, [companyId, navigate]);
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case "estimates":
+        return <EstimatesView companyId={companyId!} />;
+      default:
+        return (
+          <div className="p-6">
+            <h1 className="text-2xl font-bold mb-6">
+              {activeTab.charAt(0).toUpperCase() + activeTab.slice(1).replace("-", " ")}
+            </h1>
+            <p>Content for {activeTab} will be displayed here</p>
+          </div>
+        );
+    }
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -159,11 +175,7 @@ const Application = () => {
         <div className="flex-1">
           <Header />
           <main className="container pt-20">
-            <div className="p-6">
-              <h1 className="text-2xl font-bold mb-6">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1).replace('-', ' ')}</h1>
-              {/* Content for each tab will be implemented later */}
-              <p>Content for {activeTab} will be displayed here</p>
-            </div>
+            {renderContent()}
           </main>
         </div>
       </div>
