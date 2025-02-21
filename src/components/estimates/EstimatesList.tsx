@@ -30,7 +30,7 @@ export function EstimatesList({ companyId, onEdit, onDelete }: EstimatesListProp
       const { data, error } = await supabase
         .from("estimates")
         .select("*")
-        .eq("company_id", companyId)
+        .eq("company_id", parseInt(companyId)) // Convert string ID to number here as well
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -102,3 +102,4 @@ export function EstimatesList({ companyId, onEdit, onDelete }: EstimatesListProp
     </Table>
   );
 }
+
