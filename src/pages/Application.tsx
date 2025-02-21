@@ -1,8 +1,9 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
 import { supabaseConfig } from "@/config/supabase";
-import { Header } from "@/components/layout/Header";
+import { ApplicationHeader } from "@/components/layout/ApplicationHeader";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider } from "@/components/ui/sidebar";
 import { 
   LayoutDashboard, Users, Calendar, Map, FileText, Settings,
@@ -173,7 +174,7 @@ const Application = () => {
         </Sidebar>
 
         <div className="flex-1">
-          <Header />
+          <ApplicationHeader />
           <main className="container pt-20">
             {renderContent()}
           </main>
